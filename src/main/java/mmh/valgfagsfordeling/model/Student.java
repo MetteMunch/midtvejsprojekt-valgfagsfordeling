@@ -1,13 +1,19 @@
 package mmh.valgfagsfordeling.model;
 
+import jakarta.persistence.*;
+
 import java.util.List;
 
+@Entity
 public class Student {
 
-    private int studentID;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int studentId;
     private String fullName;
     private String email;
     private int handlingCount;
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Priority> priorityList;
 
     public Student(String fullName, String email) {
@@ -15,12 +21,15 @@ public class Student {
         this.email = email;
     }
 
-    public int getStudentID() {
-        return studentID;
+    public Student() {
     }
 
-    public void setStudentID(int studentID) {
-        this.studentID = studentID;
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(int studentID) {
+        this.studentId = studentID;
     }
 
     public String getFullName() {

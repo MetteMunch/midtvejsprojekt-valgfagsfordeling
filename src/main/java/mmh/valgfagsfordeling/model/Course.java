@@ -1,13 +1,20 @@
 package mmh.valgfagsfordeling.model;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Course {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int courseId;
     private String courseName;
     private String description;
     private int participantsCount;
     private int maxParticipants;
     private int minParticipants;
+    @ManyToOne
+    @JoinColumn(name = "teacherIdFK")
     private Teacher teacher;
 
     public Course(String courseName, String description, int maxParticipants, int minParticipants) {
@@ -16,6 +23,9 @@ public class Course {
         this.maxParticipants = maxParticipants;
         this.minParticipants = minParticipants;
         participantsCount = 0;
+    }
+
+    public Course() {
     }
 
     public int getCourseId() {

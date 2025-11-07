@@ -1,16 +1,29 @@
 package mmh.valgfagsfordeling.model;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Priority {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int priorityId;
     private int priorityNumber;
-    private boolean fullfilled;
+    private boolean fulfilled;
+    @ManyToOne
+    @JoinColumn(name = "studentIdFK")
+    private Student student;
+    @ManyToOne
+    @JoinColumn(name = "courseIdFK")
     private Course course;
 
     public Priority(int priorityNumber, Course course) {
         this.priorityNumber = priorityNumber;
         this.course = course;
-        fullfilled = false;
+        fulfilled = false;
+    }
+
+    public Priority() {
     }
 
     public int getPriorityId() {
@@ -29,12 +42,12 @@ public class Priority {
         this.priorityNumber = priorityNumber;
     }
 
-    public boolean isFullfilled() {
-        return fullfilled;
+    public boolean isFulfilled() {
+        return fulfilled;
     }
 
-    public void setFullfilled(boolean fullfilled) {
-        this.fullfilled = fullfilled;
+    public void setFulfilled(boolean fullfilled) {
+        this.fulfilled = fullfilled;
     }
 
     public Course getCourse() {
