@@ -13,15 +13,17 @@ public class Course {
     private int participantsCount;
     private int maxParticipants;
     private int minParticipants;
+    private String semester;
     @ManyToOne
-    @JoinColumn(name = "teacherIdFK")
+    @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    public Course(String courseName, String description, int maxParticipants, int minParticipants) {
+    public Course(String courseName, String description, int maxParticipants, int minParticipants, String semester) {
         this.courseName = courseName;
         this.description = description;
         this.maxParticipants = maxParticipants;
         this.minParticipants = minParticipants;
+        this.semester = semester;
         participantsCount = 0;
     }
 
@@ -82,5 +84,13 @@ public class Course {
 
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
+    }
+
+    public String getSemester() {
+        return semester;
+    }
+
+    public void setSemester(String semester) {
+        this.semester = semester;
     }
 }

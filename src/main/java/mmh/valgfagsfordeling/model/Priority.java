@@ -11,10 +11,10 @@ public class Priority {
     private int priorityNumber;
     private boolean fulfilled;
     @ManyToOne
-    @JoinColumn(name = "studentIdFK")
+    @JoinColumn(name = "student_id")
     private Student student;
     @ManyToOne
-    @JoinColumn(name = "courseIdFK")
+    @JoinColumn(name = "course_id")
     private Course course;
 
     public Priority(int priorityNumber, Course course) {
