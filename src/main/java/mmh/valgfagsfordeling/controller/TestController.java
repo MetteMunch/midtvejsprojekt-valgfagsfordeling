@@ -27,6 +27,7 @@ public class TestController {
                 .toList(); //Når stream er færdigbehandlet omdannes til liste igen, nu af studentDTO'er
     }
 
+    //TODO: skal flyttes til service-klasse
     private StudentDTO convertToDTO(Student student) {
         StudentDTO dto = new StudentDTO();
         dto.setStudentId(student.getStudentId());
