@@ -13,6 +13,7 @@ public class Priority {
     @ManyToOne
     @JoinColumn(name = "student_id")
     private Student student;
+
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
@@ -56,5 +57,13 @@ public class Priority {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 }
