@@ -1,14 +1,18 @@
 package mmh.valgfagsfordeling.service;
 
+import jakarta.transaction.Transactional;
 import mmh.valgfagsfordeling.dto.StudentDTO;
 import mmh.valgfagsfordeling.model.Priority;
 import mmh.valgfagsfordeling.model.Student;
+import mmh.valgfagsfordeling.model.Course;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 @Service
+@Transactional
 public class AdministrationService {
 
     private final StudentService studentService;
@@ -28,144 +32,24 @@ public class AdministrationService {
         this.priorityService = priorityService;
     }
 
-    public void distributionGreedyWithFainess() {
 
-        if (!initListAllStudents.isEmpty()) {
-            Student selectedStudent = getRandomStudent(initListAllStudents);
-            int handlingCount = selectedStudent.getHandlingCount();
-            Priority priorityToBeChecked = selectedStudent.getPriorityList().get(handlingCount);
-            if (courseService.checkIfAvailable(priorityToBeChecked.getCourse().getCourseId())) {
-                priorityToBeChecked.setFulfilled(true);
-                fulfilled1.add(selectedStudent);
-                selectedStudent.setHandlingCount();
-                courseService.addCount(priorityToBeChecked.getCourse().getCourseId());
-            } else {
-                Priority priorityToBeCheckedSecond = selectedStudent.getPriorityList().get(handlingCount+1);
-                if (courseService.checkIfAvailable(priorityToBeCheckedSecond.getCourse().getCourseId())) {
-                    priorityToBeCheckedSecond.setFulfilled(true);
-                    toBeFirstList1.add(selectedStudent);
-                    selectedStudent.setHandlingCount();
-                    courseService.addCount(priorityToBeChecked.getCourse().getCourseId());
-                } else {
-                    Priority priorityToBeCheckedThird = selectedStudent.getPriorityList().get(handlingCount+2);
-                    if (courseService.checkIfAvailable(priorityToBeCheckedThird.getCourse().getCourseId())) {
-                        priorityToBeCheckedThird.setFulfilled(true);
-                        toBeFirstList1.add(selectedStudent);
-                        selectedStudent.setHandlingCount();
-                        courseService.addCount(priorityToBeChecked.getCourse().getCourseId());
-                    }
-                }
-            }
-        }
-        if (!toBeFirstList1.isEmpty()) {
-            Student selectedStudent = getRandomStudent(toBeFirstList1);
-            int handlingCount = selectedStudent.getHandlingCount();
-            Priority priorityToBeChecked = selectedStudent.getPriorityList().get(handlingCount);
-            if (courseService.checkIfAvailable(priorityToBeChecked.getCourse().getCourseId())) {
-                priorityToBeChecked.setFulfilled(true);
-                fulfilled2.add(selectedStudent);
-                selectedStudent.setHandlingCount();
-                courseService.addCount(priorityToBeChecked.getCourse().getCourseId());
-            } else {
-                Priority priorityToBeCheckedSecond = selectedStudent.getPriorityList().get(handlingCount+1);
-                if (courseService.checkIfAvailable(priorityToBeCheckedSecond.getCourse().getCourseId())) {
-                    priorityToBeCheckedSecond.setFulfilled(true);
-                    toBeFirstList2.add(selectedStudent);
-                    selectedStudent.setHandlingCount();
-                    courseService.addCount(priorityToBeChecked.getCourse().getCourseId());
-                } else {
-                    Priority priorityToBeCheckedThird = selectedStudent.getPriorityList().get(handlingCount+2);
-                    if (courseService.checkIfAvailable(priorityToBeCheckedThird.getCourse().getCourseId())) {
-                        priorityToBeCheckedThird.setFulfilled(true);
-                        toBeFirstList2.add(selectedStudent);
-                        selectedStudent.setHandlingCount();
-                        courseService.addCount(priorityToBeChecked.getCourse().getCourseId());
-                    }
-                }
-            }
-        }
-        if (!fulfilled1.isEmpty()) {
-            Student selectedStudent = getRandomStudent(fulfilled1);
-            int handlingCount = selectedStudent.getHandlingCount();
-            Priority priorityToBeChecked = selectedStudent.getPriorityList().get(handlingCount);
-            if (courseService.checkIfAvailable(priorityToBeChecked.getCourse().getCourseId())) {
-                priorityToBeChecked.setFulfilled(true);
-                fulfilled2.add(selectedStudent);
-                selectedStudent.setHandlingCount();
-                courseService.addCount(priorityToBeChecked.getCourse().getCourseId());
-            } else {
-                Priority priorityToBeCheckedSecond = selectedStudent.getPriorityList().get(handlingCount+1);
-                if (courseService.checkIfAvailable(priorityToBeCheckedSecond.getCourse().getCourseId())) {
-                    priorityToBeCheckedSecond.setFulfilled(true);
-                    toBeFirstList2.add(selectedStudent);
-                    selectedStudent.setHandlingCount();
-                    courseService.addCount(priorityToBeChecked.getCourse().getCourseId());
-                } else {
-                    Priority priorityToBeCheckedThird = selectedStudent.getPriorityList().get(handlingCount+2);
-                    if (courseService.checkIfAvailable(priorityToBeCheckedThird.getCourse().getCourseId())) {
-                        priorityToBeCheckedThird.setFulfilled(true);
-                        toBeFirstList2.add(selectedStudent);
-                        selectedStudent.setHandlingCount();
-                        courseService.addCount(priorityToBeChecked.getCourse().getCourseId());
-                    }
-                }
-            }
-        }
-        if (!toBeFirstList2.isEmpty()) {
-            Student selectedStudent = getRandomStudent(toBeFirstList2);
-            int handlingCount = selectedStudent.getHandlingCount();
-            Priority priorityToBeChecked = selectedStudent.getPriorityList().get(handlingCount);
-            if (courseService.checkIfAvailable(priorityToBeChecked.getCourse().getCourseId())) {
-                priorityToBeChecked.setFulfilled(true);
-                selectedStudent.setHandlingCount();
-                courseService.addCount(priorityToBeChecked.getCourse().getCourseId());
-            } else {
-                Priority priorityToBeCheckedSecond = selectedStudent.getPriorityList().get(handlingCount+1);
-                if (courseService.checkIfAvailable(priorityToBeCheckedSecond.getCourse().getCourseId())) {
-                    priorityToBeCheckedSecond.setFulfilled(true);
-                    selectedStudent.setHandlingCount();
-                    courseService.addCount(priorityToBeChecked.getCourse().getCourseId());
-                } else {
-                    Priority priorityToBeCheckedThird = selectedStudent.getPriorityList().get(handlingCount+2);
-                    if (courseService.checkIfAvailable(priorityToBeCheckedThird.getCourse().getCourseId())) {
-                        priorityToBeCheckedThird.setFulfilled(true);
-                        selectedStudent.setHandlingCount();
-                        courseService.addCount(priorityToBeChecked.getCourse().getCourseId());
-                    } else {
-                        toBeManualHandled.add(selectedStudent);
-                    }
+    public void distributionGreedyWithFairness() {
+        initListAllStudents = studentService.studentListInternal();
 
-                }
-            }
-        }
-        if (!fulfilled2.isEmpty()) {
-            Student selectedStudent = getRandomStudent(fulfilled2);
-            int handlingCount = selectedStudent.getHandlingCount();
-            Priority priorityToBeChecked = selectedStudent.getPriorityList().get(handlingCount);
-            if (courseService.checkIfAvailable(priorityToBeChecked.getCourse().getCourseId())) {
-                priorityToBeChecked.setFulfilled(true);
-                selectedStudent.setHandlingCount();
-                courseService.addCount(priorityToBeChecked.getCourse().getCourseId());
-            } else {
-                Priority priorityToBeCheckedSecond = selectedStudent.getPriorityList().get(handlingCount+1);
-                if (courseService.checkIfAvailable(priorityToBeCheckedSecond.getCourse().getCourseId())) {
-                    priorityToBeCheckedSecond.setFulfilled(true);
-                    selectedStudent.setHandlingCount();
-                    courseService.addCount(priorityToBeChecked.getCourse().getCourseId());
-                } else {
-                    Priority priorityToBeCheckedThird = selectedStudent.getPriorityList().get(handlingCount+2);
-                    if (courseService.checkIfAvailable(priorityToBeCheckedThird.getCourse().getCourseId())) {
-                        priorityToBeCheckedThird.setFulfilled(true);
-                        selectedStudent.setHandlingCount();
-                        courseService.addCount(priorityToBeChecked.getCourse().getCourseId());
-                    } else {
-                        toBeManualHandled.add(selectedStudent);
-                    }
-                }
-            }
-        }
+        // Runde 1 - her gennemløbes hele opstartslisten med alle elever, og alle elever får tildelt ét valgfag efter
+        // højeste mulige prioritet
+        processRound(initListAllStudents, fulfilled1, toBeFirstList1, false);
+
+        // Runde 2 - her gennemløbes først de elever, som ikke fik deres 1.prioritet opfyldt, og derefter de resterende
+        processRound(toBeFirstList1, fulfilled2, toBeFirstList2, false);
+        processRound(fulfilled1, fulfilled2, toBeFirstList2, false);
+
+        // Runde 3 - her gennemløbes først de elever, som ikke fik deres 2.prioritet opfyldt, og derefter de resterende
+        processRound(toBeFirstList2, new ArrayList<>(), new ArrayList<>(), true);
+        processRound(fulfilled2, new ArrayList<>(), new ArrayList<>(), true);
 
     }
+
 
     //--------------------DTO-----------------------
 
@@ -178,7 +62,51 @@ public class AdministrationService {
     //--------------------Hjælpemetoder--------------
 
 
+    private void processRound(
+            List<Student> sourceList,
+            List<Student> fulfilledList,
+            List<Student> toBeFirstList,
+            boolean isFinalRound) {
 
+        if (sourceList.isEmpty()) return;
+
+        // Så længe der stadig er elever i kildelisten
+        while (!sourceList.isEmpty()) {
+            Student student = getRandomStudent(sourceList); // Fjerner eleven internt
+
+            boolean gotCourse = false;
+
+            // Gennemgå elevens prioriteter
+            for (Priority p : student.getPriorityList()) {
+                Course course = p.getCourse();
+
+                if (courseService.checkIfAvailable(course.getCourseId())) {
+                    p.setFulfilled(true);
+                    student.setHandlingCount();
+                    courseService.addCount(course.getCourseId());
+                    gotCourse = true;
+
+                    // Flyttes til rette liste (fairness)
+                    if (p.getPriorityNumber() == 1) {
+                        fulfilledList.add(student);
+                    } else {
+                        toBeFirstList.add(student);
+                    }
+
+                    break; // Elev fik et fag → stop prioritet-loop
+                }
+            }
+
+            // Ingen fag kunne tildeles
+            if (!gotCourse) {
+                if (isFinalRound) {
+                    toBeManualHandled.add(student);
+                } else {
+                    toBeFirstList.add(student);
+                }
+            }
+        }
+    }
 
 
     public Student getRandomStudent(List<Student> list) {
