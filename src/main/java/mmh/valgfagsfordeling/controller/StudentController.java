@@ -19,11 +19,11 @@ public class StudentController {
 
     @GetMapping("/student")
     public List<StudentDTO> allStudent() {
-        return studentService.allStudents();
+        return studentService.allStudentsDTO();
     }
 
     @GetMapping("/student/{id}")
     public StudentDTO getStudent(@PathVariable int id) {
-        return studentService.getStudent(id);
+        return studentService.getStudentDTO(id);
     }
 }

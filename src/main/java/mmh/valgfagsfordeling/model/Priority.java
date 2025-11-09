@@ -47,8 +47,8 @@ public class Priority {
         return fulfilled;
     }
 
-    public void setFulfilled(boolean fullfilled) {
-        this.fulfilled = fullfilled;
+    public void setFulfilled(boolean fulfilled) {
+        this.fulfilled = fulfilled;
     }
 
     public Course getCourse() {

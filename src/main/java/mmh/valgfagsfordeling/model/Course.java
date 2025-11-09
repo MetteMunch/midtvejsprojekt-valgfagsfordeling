@@ -58,8 +58,8 @@ public class Course {
         return participantsCount;
     }
 
-    public void setParticipantsCount(int participantsCount) {
-        this.participantsCount = participantsCount;
+    public void setParticipantsCount() {
+        participantsCount ++;
     }
 
     public int getMaxParticipants() {

@@ -16,18 +16,23 @@ public class PriorityService {
         this.priorityRepository = priorityRepository;
     }
 
-    public List<PriorityDTO> allPriorities() {
-        return priorityRepository.findAll().stream()
-                .map(priority -> convertToDTO(priority))
-                .toList();
-    }
+    //--------------CRUD Entities-----------------------
+
 
     public List<Priority> allPrioritiesSpecificStudent(int studentId) {
         return priorityRepository.findByStudentStudentIdOrderByPriorityNumberAsc(studentId);
     }
 
+    //-------------------DTO--------------------------
+
+    public List<PriorityDTO> allPrioritiesDTO() {
+        return priorityRepository.findAll().stream()
+                .map(priority -> convertToDTO(priority))
+                .toList();
+    }
+
     public List<PriorityDTO> allPrioritiesSpecificStudentDTO(int studentId) {
-        return priorityRepository.findByStudentStudentIdOrderByPriorityNumberAsc(studentId).stream()
+        return allPrioritiesSpecificStudent(studentId).stream()
                 .map(priority -> convertToDTO(priority))
                 .toList();
     }
