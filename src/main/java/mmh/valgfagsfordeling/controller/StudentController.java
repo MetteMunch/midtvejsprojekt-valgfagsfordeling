@@ -31,15 +31,15 @@ public class StudentController {
         return ResponseEntity.ok(allStudents);
     }
 
-    @GetMapping("/student/{id}")
-    public ResponseEntity<StudentDTO> getStudent(@PathVariable int id) {
-        try {
-            StudentDTO student = studentService.getStudentDTO(id);
-            return ResponseEntity.ok(student);
-        } catch (RuntimeException e) {
-            log.error("Fejl ved hentning af elev med id {}: {}", id, e.getMessage(), e);
-            return ResponseEntity.notFound().build(); //returnerer fejlkode 404 til frontend
-        }
-    }
+//    @GetMapping("/student/{id}")
+//    public ResponseEntity<StudentDTO> getStudent(@PathVariable int id) {
+//        try {
+//            StudentDTO student = studentService.getStudentDTO(id);
+//            return ResponseEntity.ok(student);
+//        } catch (RuntimeException e) {
+//            log.error("Fejl ved hentning af elev med id {}: {}", id, e.getMessage(), e);
+//            return ResponseEntity.notFound().build(); //returnerer fejlkode 404 til frontend
+//        }
+//    }
     }
 

@@ -18,25 +18,10 @@ public class TeacherService {
 
     //-------------Hjælpemetoder---------------
 
-    private TeacherDTO convertToDTO(Teacher teacher) {
+    public TeacherDTO convertToDTO(Teacher teacher) {
         TeacherDTO dto = new TeacherDTO();
         dto.setTeacherId(teacher.getTeacherId());
         dto.setTeacherFullName(teacher.getTeacherFullName());
-        dto.setCourses(
-                teacher.getCourseList().stream()
-                        .map(c -> {
-                            CourseDTO cDTO = new CourseDTO();
-                            cDTO.setCourseId(c.getCourseId());
-                            cDTO.setCourseName(c.getCourseName());
-                            cDTO.setDescription(c.getDescription());
-                            cDTO.setTeacher(c.getTeacher());
-                            cDTO.setSemester(c.getSemester());
-                            cDTO.setMaxParticipants(c.getMaxParticipants());
-                            cDTO.setMinParticipants(c.getMinParticipants());
-                            cDTO.setParticipantsCount(c.getParticipantsCount());
-                            return cDTO;
-                        }).toList()
-        );
         return dto;
     }
 }

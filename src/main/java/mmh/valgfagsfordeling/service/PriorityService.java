@@ -1,7 +1,9 @@
 package mmh.valgfagsfordeling.service;
 
 import mmh.valgfagsfordeling.dto.PriorityDTO;
+import mmh.valgfagsfordeling.model.Course;
 import mmh.valgfagsfordeling.model.Priority;
+import mmh.valgfagsfordeling.model.Student;
 import mmh.valgfagsfordeling.repository.PriorityRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +18,43 @@ public class PriorityService {
         this.priorityRepository = priorityRepository;
     }
 
-    //--------------CRUD Entities-----------------------
+    //-----------------Entities-----------------------
+
+    public List<Student> getListOfStudentsForSpecificCourse(int courseId) {
+        return priorityRepository.findByCourseCourseIdAndFulfilledTrue(courseId).stream()
+                .map(priority -> priority.getStudent())
+                .distinct() // sikrer at hver elev kun optræder én gang (ingen dubletter)
+                .toList();
+    }
+
+    public List<Course> getListOfCoursesForSpecificStudent(int studentId) {
+        List<Priority> priorities = priorityRepository.findByStudentStudentIdAndFulfilledTrue(studentId);
+
+        // 🧠 Debug: Udskriv alle kurser som bliver fundet for denne elev
+        priorities.forEach(p ->
+                System.out.println(
+                        "Student " + studentId + " → Course: "
+                                + p.getCourse().getCourseName()
+                                + " (priorityNumber=" + p.getPriorityNumber() + ", fulfilled=" + p.isFulfilled() + ")"
+                )
+        );
+
+        // Returner listen af unikke kurser
+        return priorities.stream()
+                .map(Priority::getCourse)
+                .distinct()
+                .toList();
+    }
+
+
+
+
+//    public List<Course> getListOfCoursesForSpecificStudent(int studentId) {
+//        return priorityRepository.findByStudentStudentIdAndFulfilledTrue(studentId).stream()
+//                .map(priority -> priority.getCourse())
+//                .distinct()
+//                .toList();
+//    }
 
 
     public List<Priority> allPrioritiesSpecificStudent(int studentId) {
