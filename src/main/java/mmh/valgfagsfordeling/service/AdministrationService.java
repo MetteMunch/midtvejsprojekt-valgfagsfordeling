@@ -1,11 +1,11 @@
 package mmh.valgfagsfordeling.service;
 
-import jakarta.transaction.Transactional;
 import mmh.valgfagsfordeling.dto.StudentDTO;
 import mmh.valgfagsfordeling.model.Priority;
 import mmh.valgfagsfordeling.model.Student;
 import mmh.valgfagsfordeling.model.Course;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,15 @@ public class AdministrationService {
 
 
     public void distributionGreedyWithFairness() {
+        courseService.preloadAllCourses(); //starter med at hente alle valgfag gemt i HashMap
+        //så der ikke skal laves db opslag flere gange pr elev
+
         initListAllStudents = studentService.studentListInternal();
+        toBeFirstList1 = new ArrayList<>();
+        fulfilled1 = new ArrayList<>();
+        toBeFirstList2 = new ArrayList<>();
+        fulfilled2 = new ArrayList<>();
+        toBeManualHandled = new ArrayList<>();
 
         // Runde 1 - her gennemløbes hele opstartslisten med alle elever, og alle elever får tildelt ét valgfag efter
         // højeste mulige prioritet
@@ -82,7 +90,7 @@ public class AdministrationService {
 
                 if (courseService.checkIfAvailable(course.getCourseId())) {
                     p.setFulfilled(true);
-                    student.setHandlingCount();
+                    student.incrementHandlingCount();
                     courseService.addCount(course.getCourseId());
                     gotCourse = true;
 

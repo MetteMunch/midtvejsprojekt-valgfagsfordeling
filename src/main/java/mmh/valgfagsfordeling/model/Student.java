@@ -24,6 +24,11 @@ public class Student {
     public Student() {
     }
 
+    public void incrementHandlingCount() {
+        this.handlingCount++;
+    }
+
+
     public int getStudentId() {
         return studentId;
     }
@@ -50,10 +55,6 @@ public class Student {
 
     public int getHandlingCount() {
         return handlingCount;
-    }
-
-    public void setHandlingCount() {
-        handlingCount ++;
     }
 
     public List<Priority> getPriorityList() {
