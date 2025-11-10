@@ -12,7 +12,7 @@ public class Student {
     private int studentId;
     private String fullName;
     private String email;
-    private int handlingCount;
+    private int handlingCount = 0;
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Priority> priorityList;
 
@@ -23,6 +23,11 @@ public class Student {
 
     public Student() {
     }
+
+    public void incrementHandlingCount() {
+        this.handlingCount++;
+    }
+
 
     public int getStudentId() {
         return studentId;
@@ -50,10 +55,6 @@ public class Student {
 
     public int getHandlingCount() {
         return handlingCount;
-    }
-
-    public void setHandlingCount(int handlingCount) {
-        this.handlingCount = handlingCount;
     }
 
     public List<Priority> getPriorityList() {

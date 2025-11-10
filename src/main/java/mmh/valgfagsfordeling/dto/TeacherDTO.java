@@ -1,12 +1,9 @@
 package mmh.valgfagsfordeling.dto;
 
-import java.util.List;
-
 public class TeacherDTO {
 
     private int teacherId;
     private String teacherFullName;
-    private List<CourseDTO> courses;
 
     public TeacherDTO() {
     }
@@ -25,13 +22,5 @@ public class TeacherDTO {
 
     public void setTeacherFullName(String teacherFullName) {
         this.teacherFullName = teacherFullName;
-    }
-
-    public List<CourseDTO> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(List<CourseDTO> courses) {
-        this.courses = courses;
     }
 }

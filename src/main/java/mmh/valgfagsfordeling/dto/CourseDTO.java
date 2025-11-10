@@ -1,7 +1,5 @@
 package mmh.valgfagsfordeling.dto;
 
-import mmh.valgfagsfordeling.model.Teacher;
-
 public class CourseDTO {
 
     private int courseId;
@@ -11,7 +9,7 @@ public class CourseDTO {
     private int maxParticipants;
     private int minParticipants;
     private String semester;
-    private Teacher teacher;
+    private TeacherDTO teacher;
 
     public CourseDTO() {
     }
@@ -72,11 +70,11 @@ public class CourseDTO {
         this.semester = semester;
     }
 
-    public Teacher getTeacher() {
+    public TeacherDTO getTeacher() {
         return teacher;
     }
 
-    public void setTeacher(Teacher teacher) {
+    public void setTeacher(TeacherDTO teacher) {
         this.teacher = teacher;
     }
 }
