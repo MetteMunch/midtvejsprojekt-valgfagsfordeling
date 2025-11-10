@@ -4,6 +4,7 @@ import mmh.valgfagsfordeling.dto.StudentDTO;
 import mmh.valgfagsfordeling.service.AdministrationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,15 +31,15 @@ public class StudentController {
         return ResponseEntity.ok(allStudents);
     }
 
-//    @GetMapping("/student/{id}")
-//    public ResponseEntity<StudentDTO> getStudent(@PathVariable int id) {
-//        try {
-//            StudentDTO student = studentService.getStudentDTO(id);
-//            return ResponseEntity.ok(student);
-//        } catch (RuntimeException e) {
-//            log.error("Fejl ved hentning af elev med id {}: {}", id, e.getMessage(), e);
-//            return ResponseEntity.notFound().build(); //returnerer fejlkode 404 til frontend
-//        }
-//    }
+    @GetMapping("/student/{id}")
+    public ResponseEntity<StudentDTO> getStudent(@PathVariable int id) {
+        try {
+            StudentDTO student = administrationService.getStudentDTO(id);
+            return ResponseEntity.ok(student);
+        } catch (RuntimeException e) {
+            log.error("Fejl ved hentning af elev med id {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.notFound().build(); //returnerer fejlkode 404 til frontend
+        }
+    }
     }
 

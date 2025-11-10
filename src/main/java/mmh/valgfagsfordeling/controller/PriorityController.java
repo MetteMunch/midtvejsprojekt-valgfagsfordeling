@@ -18,9 +18,9 @@ public class PriorityController {
         this.administrationService = administrationService;
     }
 
-    @GetMapping("/priority/{studentid}")
-    public ResponseEntity<List<PriorityDTO>> allPrioritiesSpecificStudent(@PathVariable int studentid) {
-        List<PriorityDTO> priorities = administrationService.allPrioritiesSpecificStudentDTO(studentid);
+    @GetMapping("/priority/{studentId}")
+    public ResponseEntity<List<PriorityDTO>> allPrioritiesSpecificStudent(@PathVariable int studentId) {
+        List<PriorityDTO> priorities = administrationService.allPrioritiesSpecificStudentDTO(studentId);
 
         if (priorities.isEmpty()) {
             return ResponseEntity.noContent().build(); //returnerer statuskode 204

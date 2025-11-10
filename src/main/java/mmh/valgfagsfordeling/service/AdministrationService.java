@@ -131,7 +131,6 @@ public class AdministrationService {
         }
     }
 
-
     public Student getRandomStudent(List<Student> list) {
         Random random = new Random();
         int randomIndeks = random.nextInt(0, list.size());
@@ -140,7 +139,7 @@ public class AdministrationService {
         return selectedStudent;
     }
 
-    //--------------------METODER TIL ENDPOINTS-----------------------
+    //--------------------DTO METODER TIL ENDPOINTS-----------------------
 
     //endpoint til at få liste over elever på et givent valgfag (efter fordeling)
     public List<StudentDTO> listOfStudentsSpecificCourseDTO(int courseId) {
