@@ -1,6 +1,7 @@
 package mmh.valgfagsfordeling.controller;
 
 import mmh.valgfagsfordeling.dto.CourseDTO;
+import mmh.valgfagsfordeling.dto.DashboardAdmDTO;
 import mmh.valgfagsfordeling.dto.StudentDTO;
 import mmh.valgfagsfordeling.service.AdministrationService;
 import org.springframework.http.ResponseEntity;
@@ -20,22 +21,10 @@ public class AdministrationController {
         this.administrationService = administrationService;
     }
 
-    @PostMapping("/start")
-    public ResponseEntity<String> startDistribution() {
-        administrationService.distributionGreedyWithFairness();
-        return ResponseEntity.accepted()
-                .body("Fordelingsalgoritme igangsat");
-    }
-
-    @GetMapping("/manual")
-    public ResponseEntity<List<StudentDTO>> toBeManualHandledList() {
-        List<StudentDTO> students = administrationService.toBeManualHandledListDTO();
-
-        if (students.isEmpty()) {
-            return ResponseEntity.noContent().build(); //returnerer statuskode 204
-        }
-
-        return ResponseEntity.ok(students); //returnerer statuskode 200 og listen med students
+    @GetMapping("/dashboard")
+    public ResponseEntity<DashboardAdmDTO> getDashboard() {
+        DashboardAdmDTO dashboard = administrationService.buildDashboard();
+        return ResponseEntity.ok(dashboard);
     }
 
     @GetMapping("/course/{id}/students")
@@ -59,6 +48,25 @@ public class AdministrationController {
         }
         return ResponseEntity.ok(courses);
     }
+
+    @GetMapping("/manual")
+    public ResponseEntity<List<StudentDTO>> toBeManualHandledList() {
+        List<StudentDTO> students = administrationService.toBeManualHandledListDTO();
+
+        if (students.isEmpty()) {
+            return ResponseEntity.noContent().build(); //returnerer statuskode 204
+        }
+
+        return ResponseEntity.ok(students); //returnerer statuskode 200 og listen med students
+    }
+
+    @PostMapping("/start")
+    public ResponseEntity<String> startDistribution() {
+        administrationService.distributionGreedyWithFairness();
+        return ResponseEntity.accepted()
+                .body("Fordelingsalgoritme igangsat");
+    }
+
 
 
 }

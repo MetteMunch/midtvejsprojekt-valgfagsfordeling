@@ -1,9 +1,6 @@
 package mmh.valgfagsfordeling.service;
 
-import mmh.valgfagsfordeling.dto.CourseDTO;
-import mmh.valgfagsfordeling.dto.PriorityDTO;
-import mmh.valgfagsfordeling.dto.StudentDTO;
-import mmh.valgfagsfordeling.dto.TeacherDTO;
+import mmh.valgfagsfordeling.dto.*;
 import mmh.valgfagsfordeling.model.Priority;
 import mmh.valgfagsfordeling.model.Student;
 import mmh.valgfagsfordeling.model.Course;
@@ -32,6 +29,7 @@ public class AdministrationService {
 
 
     private List<Student> initListAllStudents;
+    private List<Student> allStudentListBackUp;
     private List<Student> toBeFirstList1;
     private List<Student> fulfilled1;
     private List<Student> toBeFirstList2;
@@ -53,7 +51,9 @@ public class AdministrationService {
         preloadAllCourses(); //starter med at hente alle valgfag gemt i HashMap
         //så der ikke skal laves db opslag flere gange pr elev
 
-        initListAllStudents = studentListInternal();
+
+        initListAllStudents = allStudentsWithPriorities();
+        allStudentListBackUp = new ArrayList<>(initListAllStudents); //Vi gemmer lige opstartslisten, så vi har denne til kvantificering mm
         toBeFirstList1 = new ArrayList<>();
         fulfilled1 = new ArrayList<>();
         toBeFirstList2 = new ArrayList<>();
@@ -138,10 +138,87 @@ public class AdministrationService {
         list.remove(randomIndeks); //her fjernes eleven fra listen
         return selectedStudent;
     }
+    //--------------KVANTIFICERINGS- OG STATISTIKMETODER---------
+
+    public int getTotalProcessedStudents() {
+        return (allStudentListBackUp.isEmpty()) ? 0 : allStudentListBackUp.size();
+    }
+
+    public int calculateStudentScore(Student student) {
+        List<Priority> priorities = student.getPriorityList();
+
+        long fulfilledFirst3 = priorities.stream()
+                .filter(p -> p.getPriorityNumber() <= 3)
+                .filter(Priority::isFulfilled)
+                .count();
+
+        if (fulfilledFirst3 == 3) return 0;
+        if (fulfilledFirst3 == 2) return -1;
+        if (fulfilledFirst3 == 1) return -2;
+        return -3;
+    }
+
+    public int getTotalQuantificationScore() {
+        return allStudentListBackUp.stream()
+                .mapToInt(this::calculateStudentScore)
+                .sum();
+    }
+
+    //Metode der returnerer de data som jeg gerne vil vise på dashboard i forhold til kvantificering
+    public Map<String, Integer> getDistributionStats() {
+
+        Map<String, Integer> stats = new HashMap<>(); //key er kategorien og værdien er antal elever i den kategori
+
+        stats.put("threeCourses", (int) allStudentListBackUp.stream()
+                .filter(s -> getFulfilledCount(s) == 3) //Hvis eleven har fået præcis 3 valgfag tildelt så kommer eleven med videre
+                .count()); //sammentælling af alle elever med præcis 3 tildelte valgfag
+
+        stats.put("twoCourses", (int) allStudentListBackUp.stream()
+                .filter(s -> getFulfilledCount(s) == 2)
+                .count());
+
+        stats.put("oneCourse", (int) allStudentListBackUp.stream()
+                .filter(s -> getFulfilledCount(s) == 1)
+                .count());
+
+        stats.put("zeroCourses", (int) allStudentListBackUp.stream()
+                .filter(s -> getFulfilledCount(s) == 0)
+                .count());
+
+        return stats;
+    }
+
+    //Metode der returnerer hvor mange valgfag en elev har fået tildelt
+    private int getFulfilledCount(Student s) {
+        return (int) s.getPriorityList().stream()
+                .filter(Priority::isFulfilled)
+                .count();
+    }
+
+    //Metode der returnerer liste med valgfag og antal tilmeldte
+    public List<StatsDTO> getCourseStats() {
+        return courseCache.values().stream()
+                .map(c -> new StatsDTO(c.getCourseName(), c.getParticipantsCount()))
+                .toList();
+    }
+
 
     //--------------------DTO METODER TIL ENDPOINTS-----------------------
 
-    //endpoint til at få liste over elever på et givent valgfag (efter fordeling)
+    //samling af data til dashboard for studieadministration
+    public DashboardAdmDTO buildDashboard() {
+        DashboardAdmDTO dashboardData = new DashboardAdmDTO();
+        dashboardData.setProcessedStudents(getTotalProcessedStudents());
+        dashboardData.setTotalQualification(getTotalQuantificationScore());
+        dashboardData.setStats(getDistributionStats());
+        dashboardData.setStudentsWithoutPriorities(allStudentsWithoutPrioritiesDTO());
+        dashboardData.setCourseStats(getCourseStats());
+
+        return dashboardData;
+    }
+
+
+    //liste over alle elever på et givent valgfag (efter fordeling)
     public List<StudentDTO> listOfStudentsSpecificCourseDTO(int courseId) {
         List<Student> students = getListOfStudentsForSpecificCourse(courseId);
         return students.stream()
@@ -149,7 +226,7 @@ public class AdministrationService {
                 .toList();
     }
 
-    //endpoint til at vise valgfag for en given elev (efter fordeling)
+    //liste der viser valgfag for en given elev (efter fordeling)
     public List<CourseDTO> listOfCoursesSpecificStudent(int studentId) {
         List<Course> courses = getListOfCoursesForSpecificStudent(studentId);
         return courses.stream()
@@ -157,7 +234,7 @@ public class AdministrationService {
                 .toList();
     }
 
-    //endpoint til at få en liste med de elever, som manuelt skal håndteres (efter fordeling)
+    //liste med de elever, som manuelt skal håndteres (efter fordeling)
     public List<StudentDTO> toBeManualHandledListDTO() {
         return toBeManualHandled.stream()
                 .map(student -> convertStudentToDTO(student))
@@ -165,12 +242,23 @@ public class AdministrationService {
     }
 
 
-
-
     //-----------------STUDENT metoder--------------
 
-    public List<Student> studentListInternal() {
+    public List<Student> allStudents() {
         return studentRepository.findAll();
+    }
+
+    public List<Student> allStudentsWithPriorities() {
+        return allStudents().stream()
+                .filter(student -> !student.getPriorityList().isEmpty())
+                .collect(Collectors.toCollection(ArrayList::new));
+        //Her kan jeg ikke bare bruge .toList, da jeg skal bruge en manipulerbar liste (hvor jeg kan bruge .remove metoden)
+    }
+
+    public List<Student> studentsWithoutPrioritiesHandedIn() {
+        return allStudents().stream()
+                .filter(student -> student.getPriorityList() == null || student.getPriorityList().isEmpty())
+                .toList();
     }
 
     public Student getStudent(int studentId) {
@@ -179,7 +267,19 @@ public class AdministrationService {
     }
 
     public List<StudentDTO> allStudentsDTO() {
-        return studentListInternal().stream()
+        return allStudents().stream()
+                .map(student -> convertStudentToDTO(student))
+                .toList();
+    }
+
+    public List<StudentDTO> allStudentsWithPrioritiesDTO() {
+        return allStudentsWithPriorities().stream()
+                .map(student -> convertStudentToDTO(student))
+                .toList();
+    }
+
+    public List<StudentDTO> allStudentsWithoutPrioritiesDTO() {
+        return studentsWithoutPrioritiesHandedIn().stream()
                 .map(student -> convertStudentToDTO(student))
                 .toList();
     }
@@ -206,6 +306,7 @@ public class AdministrationService {
         );
         return dto;
     }
+
 
     //------------------COURSE metoder--------------
 
