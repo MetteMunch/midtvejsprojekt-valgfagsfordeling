@@ -53,7 +53,7 @@ public class AdministrationService {
         preloadAllCourses(); //starter med at hente alle valgfag gemt i HashMap
         //så der ikke skal laves db opslag flere gange pr elev
 
-        initListAllStudents = studentListInternal();
+        initListAllStudents = allStudents();
         toBeFirstList1 = new ArrayList<>();
         fulfilled1 = new ArrayList<>();
         toBeFirstList2 = new ArrayList<>();
@@ -165,13 +165,25 @@ public class AdministrationService {
     }
 
 
-
-
     //-----------------STUDENT metoder--------------
 
-    public List<Student> studentListInternal() {
+    public List<Student> allStudents() {
         return studentRepository.findAll();
     }
+
+    public List<Student> allStudentsWithPriorities() {
+        return allStudents().stream()
+                .filter(student -> !student.getPriorityList().isEmpty())
+                .toList();
+    }
+
+    public List<Student> studentsWithoutPrioritiesHandedIn() {
+        return allStudents().stream()
+                .filter(student -> student.getPriorityList() == null || student.getPriorityList().isEmpty())
+                .toList();
+    }
+
+    //TODO: skal også have hentet alle lister som har angivet prioriteter, dvs frasorteret dem der ikke har
 
     public Student getStudent(int studentId) {
         return studentRepository.findById(studentId)
@@ -179,7 +191,7 @@ public class AdministrationService {
     }
 
     public List<StudentDTO> allStudentsDTO() {
-        return studentListInternal().stream()
+        return allStudents().stream()
                 .map(student -> convertStudentToDTO(student))
                 .toList();
     }
@@ -206,6 +218,62 @@ public class AdministrationService {
         );
         return dto;
     }
+
+    //--------------STUDENT beregning og kvantificeringsmetoder---------
+
+    public int getTotalProcessedStudents() {
+        return (initListAllStudents.isEmpty()) ? 0 : initListAllStudents.size();
+    }
+
+    public int calculateStudentScore(Student student) {
+        List<Priority> priorities = student.getPriorityList();
+
+        long fulfilledFirst3 = priorities.stream()
+                .filter(p -> p.getPriorityNumber() <= 3)
+                .filter(Priority::isFulfilled)
+                .count();
+
+        if (fulfilledFirst3 == 3) return 0;
+        if (fulfilledFirst3 == 2) return -1;
+        if (fulfilledFirst3 == 1) return -2;
+        return -3;
+    }
+
+    public int getTotalQuantification() {
+        return initListAllStudents.stream()
+                .mapToInt(this::calculateStudentScore)
+                .sum();
+    }
+
+    public Map<String, Long> getDistributionStats() {
+
+        Map<String, Long> stats = new HashMap<>();
+
+        stats.put("threeCourses", initListAllStudents.stream()
+                .filter(s -> getFulfilledCount(s) == 3)
+                .count());
+
+        stats.put("twoCourses", initListAllStudents.stream()
+                .filter(s -> getFulfilledCount(s) == 2)
+                .count());
+
+        stats.put("oneCourse", initListAllStudents.stream()
+                .filter(s -> getFulfilledCount(s) == 1)
+                .count());
+
+        stats.put("zeroCourses", initListAllStudents.stream()
+                .filter(s -> getFulfilledCount(s) == 0)
+                .count());
+
+        return stats;
+    }
+
+    private long getFulfilledCount(Student s) {
+        return s.getPriorityList().stream()
+                .filter(Priority::isFulfilled)
+                .count();
+    }
+
 
     //------------------COURSE metoder--------------
 
