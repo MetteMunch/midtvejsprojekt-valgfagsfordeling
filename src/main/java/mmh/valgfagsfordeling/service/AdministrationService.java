@@ -251,7 +251,8 @@ public class AdministrationService {
     public List<Student> allStudentsWithPriorities() {
         return allStudents().stream()
                 .filter(student -> !student.getPriorityList().isEmpty())
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
+        //Her kan jeg ikke bare bruge .toList, da jeg skal bruge en manipulerbar liste (hvor jeg kan bruge .remove metoden)
     }
 
     public List<Student> studentsWithoutPrioritiesHandedIn() {
