@@ -60,13 +60,17 @@ public class AdministrationController {
         return ResponseEntity.ok(students); //returnerer statuskode 200 og listen med students
     }
 
+    @PostMapping("/reset")
+    public ResponseEntity<String> resetDistribution() {
+        administrationService.resetDatabaseState();
+        return ResponseEntity.ok("System nulstillet");
+    }
+
     @PostMapping("/start")
     public ResponseEntity<String> startDistribution() {
         administrationService.distributionGreedyWithFairness();
         return ResponseEntity.accepted()
                 .body("Fordelingsalgoritme igangsat");
     }
-
-
 
 }

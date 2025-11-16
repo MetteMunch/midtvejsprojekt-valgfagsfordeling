@@ -202,6 +202,18 @@ public class AdministrationService {
                 .toList();
     }
 
+    //------------------ RESET METODE SÅ FORDELING KAN KØRE GENTAGNE GANGE -----------------------
+
+    @Transactional
+    public void resetDatabaseState() {
+        priorityRepository.resetAllFulfilled();
+        courseRepository.resetAllParticipantCounts();
+        studentRepository.resetAllHandlingCounts();
+    }
+
+
+
+
 
     //--------------------DTO METODER TIL ENDPOINTS-----------------------
 
@@ -209,7 +221,7 @@ public class AdministrationService {
     public DashboardAdmDTO buildDashboard() {
         DashboardAdmDTO dashboardData = new DashboardAdmDTO();
         dashboardData.setProcessedStudents(getTotalProcessedStudents());
-        dashboardData.setTotalQualification(getTotalQuantificationScore());
+        dashboardData.setTotalQuantification(getTotalQuantificationScore());
         dashboardData.setStats(getDistributionStats());
         dashboardData.setStudentsWithoutPriorities(allStudentsWithoutPrioritiesDTO());
         dashboardData.setCourseStats(getCourseStats());
