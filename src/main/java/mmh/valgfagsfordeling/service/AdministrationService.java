@@ -209,7 +209,7 @@ public class AdministrationService {
     public DashboardAdmDTO buildDashboard() {
         DashboardAdmDTO dashboardData = new DashboardAdmDTO();
         dashboardData.setProcessedStudents(getTotalProcessedStudents());
-        dashboardData.setTotalQualification(getTotalQuantificationScore());
+        dashboardData.setTotalQuantification(getTotalQuantificationScore());
         dashboardData.setStats(getDistributionStats());
         dashboardData.setStudentsWithoutPriorities(allStudentsWithoutPrioritiesDTO());
         dashboardData.setCourseStats(getCourseStats());
