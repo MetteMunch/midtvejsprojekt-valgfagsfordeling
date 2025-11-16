@@ -202,6 +202,18 @@ public class AdministrationService {
                 .toList();
     }
 
+    //------------------ RESET METODE SÅ FORDELING KAN KØRE GENTAGNE GANGE -----------------------
+
+    @Transactional
+    public void resetDatabaseState() {
+        priorityRepository.resetAllFulfilled();
+        courseRepository.resetAllParticipantCounts();
+        studentRepository.resetAllHandlingCounts();
+    }
+
+
+
+
 
     //--------------------DTO METODER TIL ENDPOINTS-----------------------
 

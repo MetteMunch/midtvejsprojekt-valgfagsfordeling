@@ -58,10 +58,11 @@ function loadAdminDashboard() {
                     <div class="stat-box">
                         <h3>Total kvantificering</h3>
                         <p id="stat-quant">...</p>
-                        <p>Alt opfyldt = 0 point</p>
-                        <p>Opfyldt to ud af de tre første prioriteter = -1 point</p>
-                        <p>Opfyldt en ud af de tre første prioriteter = -2 point</p>
-                        <p>Ingen opfyldt af de tre første prioriteter = -3 point</p>
+                        <br>
+                        <p class="info-tekst">Alt opfyldt = 0 point</p>
+                        <p class="info-tekst">Opfyldt to ud af de tre første prioriteter = -1 point</p>
+                        <p class="info-tekst">Opfyldt en ud af de tre første prioriteter = -2 point</p>
+                        <p class="info-tekst">Ingen opfyldt af de tre første prioriteter = -3 point</p>
                         
                     </div>
 
@@ -76,7 +77,7 @@ function loadAdminDashboard() {
                         <h3>Valgfag tildeling</h3>
                         <table id="stat-courses-table" class="stat-table">
                             <thead>
-                            <tr><th>Valgfag</th><th>Deltagere</th></tr>
+                            <tr><th>Valgfag</th><th>Antal deltagere</th></tr>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -106,20 +107,23 @@ function startDistributionAndReloadDashboard(button) {
     button.disabled = true
     button.textContent = "Fordeling kører..."
 
-    fetch("/start", {
-        method: "POST"
-    })
+    fetch("/reset", { method: "POST" })
         .then(res => {
-            if (!res.ok) throw new Error("Fejl i fordelingsendpoint")
-            console.log("Fordeling igangsat!")
-            return new Promise(resolve => setTimeout(resolve, 500)) // lille delay
+            if (!res.ok) throw new Error("Fejl i reset endpoint")
+            console.log("Reset gennemført")
         })
+        .then(() => fetch("/start", { method: "POST" }))
+        .then(res => {
+            if (!res.ok) throw new Error("Fejl i fordelingsendpoint");
+            console.log("Fordeling gennemført");
+        })
+        // 3) Hent nye data
         .then(() => fetchDataToDashboard())
-        .catch(err => console.error("Fejl i startDistribution:", err))
+        .catch(err => console.error("Fejl:", err))
         .finally(() => {
-            button.disabled = false
-            button.textContent = "Lav fordeling"
-        })
+            button.disabled = false;
+            button.textContent = "Lav fordeling";
+        });
 }
 
 function fetchDataToDashboard() {
