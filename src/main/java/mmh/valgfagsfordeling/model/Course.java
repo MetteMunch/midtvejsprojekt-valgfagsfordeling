@@ -93,4 +93,8 @@ public class Course {
     public void setSemester(String semester) {
         this.semester = semester;
     }
+
+    public void setParticipantsCount(int participantsCount) {
+        this.participantsCount = participantsCount;
+    }
 }

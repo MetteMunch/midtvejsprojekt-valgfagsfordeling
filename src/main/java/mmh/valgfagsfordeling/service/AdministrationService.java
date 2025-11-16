@@ -131,8 +131,14 @@ public class AdministrationService {
         }
     }
 
+    protected Random random = new Random(); //protected så jeg kan override random i testklasse
+
+    public void setRandom(Random random) {
+        this.random = random;
+    }
+
     public Student getRandomStudent(List<Student> list) {
-        Random random = new Random();
+
         int randomIndeks = random.nextInt(0, list.size());
         Student selectedStudent = list.get(randomIndeks);
         list.remove(randomIndeks); //her fjernes eleven fra listen
@@ -189,7 +195,8 @@ public class AdministrationService {
     }
 
     //Metode der returnerer hvor mange valgfag en elev har fået tildelt
-    private int getFulfilledCount(Student s) {
+    //Accessmodifier er protected, så jeg kan bruge den i test
+    protected int getFulfilledCount(Student s) {
         return (int) s.getPriorityList().stream()
                 .filter(Priority::isFulfilled)
                 .count();
