@@ -100,12 +100,10 @@ public class AdministrationService {
             for (int i = handlingCount; i < priorities.size(); i++) {
                 Priority p = priorities.get(i);
                 Course course = p.getCourse();
-                System.out.println("Her er jeg inden første check og i / handlingCount er " + i);
 
                 if (checkIfAvailable(course.getCourseId())) {
                     p.setFulfilled(true);
                     student.incrementHandlingCount();
-                    System.out.println("hvis første bliver fulfilled handling count er: " + student.getHandlingCount());
                     addCount(course.getCourseId());
                     gotCourse = true;
 
