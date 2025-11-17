@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -39,16 +40,24 @@ class AdministrationServiceTest {
     Student s1;
     Student s2;
     Student s3;
+    Student s4;
+    Student s5;
+    Student s6;
     Course c1;
     Course c2;
     Course c3;
+    Course c4;
+    Course c5;
+    Course c6;
 
 
     @BeforeEach
     void setUp() {
         service = new AdministrationService(studentRepo, courseRepo, priorityRepo, teacherRepo);
         service.setRandom(new Random(1));
+        setUpTestData();
     }
+
 
     private Course course(int id, String name) {
         Course c = new Course();
@@ -76,10 +85,20 @@ class AdministrationServiceTest {
         s2.setStudentId(2);
         s3 = new Student("C", "c@test.dk");
         s3.setStudentId(3);
+        s4 = new Student("D", "d@test.dk");
+        s4.setStudentId(4);
+        s5 = new Student("E", "e@test.dk");
+        s5.setStudentId(5);
+        s6 = new Student("F", "f@test.dk");
+        s6.setStudentId(6);
+
 
         c1 = course(1, "C1");
         c2 = course(2, "C2");
         c3 = course(3, "C3");
+        c4 = course(4, "C4");
+        c5 = course(5, "C5");
+        c6 = course(6, "C6");
 
         s1.setPriorityList(List.of(
                 pr(s1, c1, 1),
@@ -98,14 +117,30 @@ class AdministrationServiceTest {
                 pr(s3, c3, 2),
                 pr(s3, c2, 3)
         ));
+
+        s4.setPriorityList(List.of(
+                pr(s4, c5, 1),
+                pr(s4, c4, 2),
+                pr(s4, c6, 3)
+        ));
+
+        s5.setPriorityList(List.of(
+                pr(s5, c6, 1),
+                pr(s5, c4, 2),
+                pr(s5, c5, 3)
+        ));
+
+        s6.setPriorityList(List.of(
+                pr(s6, c4, 1),
+                pr(s6, c5, 2),
+                pr(s6, c6, 3)
+        ));
     }
 
     @Test
     void testDistributionBasicScenario() {
 
         // arrange
-        setUpTestData();
-
         when(courseRepo.findAll()).thenReturn(List.of(c1, c2, c3));
         when(studentRepo.findAll()).thenReturn(List.of(s1, s2, s3));
 
@@ -132,18 +167,60 @@ class AdministrationServiceTest {
         assertEquals(1, service.getFulfilledCount(s3));
     }
 
+    @Test
+    void testCheckIfAvailable() {
+        c6.setMaxParticipants(2);
+        c6.setParticipantsCount(1);
 
+        // Læg i cache manuelt (for at undgå DB)
+        service.getCourseCache().put(6, c6);
 
+        assertTrue(service.checkIfAvailable(6));
 
+        c6.setParticipantsCount(2);
+        assertFalse(service.checkIfAvailable(6));
+    }
 
+    @Test
+    void testGetFulfilledCountAndCalculationStudentScore() {
+        Student s = new Student("Test", "test@test.dk");
 
+        Priority p1 = new Priority();
+        p1.setFulfilled(true);
 
+        Priority p2 = new Priority();
+        p2.setFulfilled(false);
 
+        Priority p3 = new Priority();
+        p3.setFulfilled(true);
 
+        s.setPriorityList(List.of(p1, p2, p3));
 
+        assertEquals(2, service.getFulfilledCount(s));
+        assertEquals(-1, service.calculateStudentScore(s));
+    }
 
+    @Test
+    void testProcessRound_FairnessMovesStudentToToBeFirst() {
 
+        s4.setHandlingCount(0);
+        Priority second = s4.getPriorityList().get(1);
 
+        c5.setMaxParticipants(0); // FYLDT → så elev kan ikke få 1. prioritet
+        c4.setMaxParticipants(1); // Kan godt få 2. prioritet
 
+        service.getCourseCache().put(4, c4);
+        service.getCourseCache().put(5, c5);
+
+        List<Student> src = new ArrayList<>(List.of(s4));
+        List<Student> fulfilled = new ArrayList<>();
+        List<Student> toBeFirst = new ArrayList<>();
+
+        service.processRoundForTest(src, fulfilled, toBeFirst, false);
+
+        assertEquals(1, s4.getHandlingCount());
+        assertTrue(second.isFulfilled());
+        assertTrue(toBeFirst.contains(s4));  // fordi prioritet 1 != handlingCount 0
+    }
 
 }

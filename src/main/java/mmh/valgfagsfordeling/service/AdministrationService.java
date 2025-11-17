@@ -438,5 +438,36 @@ public class AdministrationService {
         return dto;
     }
 
+    //------------------GETTER OG HJÆLPEMETODER TIL TEST-------------------
+
+
+    List<Student> getFulfilled1() {
+        return fulfilled1;
+    }
+
+    List<Student> getToBeFirstList1() {
+        return toBeFirstList1;
+    }
+
+    List<Student> getFulfilled2() {
+        return fulfilled2;
+    }
+
+    List<Student> getToBeFirstList2() {
+        return toBeFirstList2;
+    }
+
+    List<Student> getManualList() {
+        return toBeManualHandled;
+    }
+
+    Map<Integer, Course> getCourseCache() {
+        return courseCache;
+    }
+
+    void processRoundForTest(List<Student> a, List<Student> b, List<Student> c, boolean d) {
+        processRound(a, b, c, d);
+    }
+
 
 }

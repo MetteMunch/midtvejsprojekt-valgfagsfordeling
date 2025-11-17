@@ -57,6 +57,10 @@ public class Student {
         return handlingCount;
     }
 
+    public void setHandlingCount(int handlingCount) {
+        this.handlingCount = handlingCount;
+    }
+
     public List<Priority> getPriorityList() {
         return priorityList;
     }
