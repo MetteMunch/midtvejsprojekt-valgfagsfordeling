@@ -131,8 +131,14 @@ public class AdministrationService {
         }
     }
 
+    protected Random random = new Random(); //protected så jeg kan override random i testklasse
+
+    public void setRandom(Random random) {
+        this.random = random;
+    }
+
     public Student getRandomStudent(List<Student> list) {
-        Random random = new Random();
+
         int randomIndeks = random.nextInt(0, list.size());
         Student selectedStudent = list.get(randomIndeks);
         list.remove(randomIndeks); //her fjernes eleven fra listen
@@ -189,7 +195,8 @@ public class AdministrationService {
     }
 
     //Metode der returnerer hvor mange valgfag en elev har fået tildelt
-    private int getFulfilledCount(Student s) {
+    //Accessmodifier er protected, så jeg kan bruge den i test
+    protected int getFulfilledCount(Student s) {
         return (int) s.getPriorityList().stream()
                 .filter(Priority::isFulfilled)
                 .count();
@@ -429,6 +436,37 @@ public class AdministrationService {
         dto.setTeacherId(teacher.getTeacherId());
         dto.setTeacherFullName(teacher.getTeacherFullName());
         return dto;
+    }
+
+    //------------------GETTER OG HJÆLPEMETODER TIL TEST-------------------
+
+
+    List<Student> getFulfilled1() {
+        return fulfilled1;
+    }
+
+    List<Student> getToBeFirstList1() {
+        return toBeFirstList1;
+    }
+
+    List<Student> getFulfilled2() {
+        return fulfilled2;
+    }
+
+    List<Student> getToBeFirstList2() {
+        return toBeFirstList2;
+    }
+
+    List<Student> getManualList() {
+        return toBeManualHandled;
+    }
+
+    Map<Integer, Course> getCourseCache() {
+        return courseCache;
+    }
+
+    void processRoundForTest(List<Student> a, List<Student> b, List<Student> c, boolean d) {
+        processRound(a, b, c, d);
     }
 
 
