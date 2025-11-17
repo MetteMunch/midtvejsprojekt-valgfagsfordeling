@@ -17,7 +17,7 @@ n = antal elever
 p = antal prioriteter pr. elev
 c = antal valgfag
 
-<u>preloadAllCourses()</u>
+<ins>preloadAllCourses()</ins>
 Alle valgfag hentes én gang og gemmes i HashMap => O(c) = c er meget lille (8), så det svarer i praksis til O(1), hvilket er konstant tid uanset input.
 
 <u>allStudentsWithPriorities()</u>
