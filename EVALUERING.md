@@ -57,3 +57,11 @@ Samlet kompleksitet her er O(1)*O(n) = O(n) så lineær
 <ins>getDistributionStats()</ins>
 I denne metode ønsker jeg at returnere data, der viser hvor mange elever, der har fået alle tre valgfag tildelt, hvor mange der mangler at få 1 valgfag tildelt, hvor mange der mangler at få 2 valgfag tildelt og hvor mange der mangler at få alle 3 valgfag tildelt (af de behandlede elever).
 Jeg laver i denne fire streams, som alle gennemløber alle elver, for at kunne filtrere og lave count. Denne ville nok kunne optimeres til en enkel stream med en switch. Selvom metoden udfører fire gennemløb af listen, reduceres O(4n) til O(n), køretiden stiger altså lineært i takt med antal elever.
+
+# Brug af AI i projektet
+Jeg har benyttet AI (ChatGPT) i forbindelse med dette projekt (og generelt i mit studiearbejde). Jeg anvender AI, som en form for hjælpelærer, dvs. min prompts er ofte for at få noget uddybet, fejlsøgning, inspiration, code-review, kreere dummy data og generelt få overblik og forstå meningen.
+Jeg ender tit i nogle lange "dialoger", som kan være frustrerende men også meget lærerige. De kommer jo helt sikkert af, at jeg ikke prompter korrekt og skarpt nok fra starten, men samtidig giver "dialogen" ofte en dybere forståelse for det hele.
+Et eksempel er fx denne, hvor jeg prompter min første udarbejdede udgave af algoritmen (på baggrund af mit diagram flow), som er med rigtig mange if-else loops. Jeg ønskede hjælp til refactoring, hvilket endte med en lang "dialog", da vi ikke var helt enige om at forstå flowet. Jeg har markeret mine prompts med gult:
+[Åbn PDF-dokumentet](docs/ex.1.pdf)
+Her er også et prompt i forhold til, at jeg ønsker optimering af kode, så jeg undgår unødvendige databasekald:
+[Åbn PDF-dokumentet](docs/ex.2.pdf)
