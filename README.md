@@ -15,7 +15,7 @@ Opret følgende environment variables i din IDE:
 Kør herefter applikationen, så tabeller og afhængigheder oprettes.
 
 Her nedenstående ses et ER diagram over databasen (reversed engineered fra MySql):
-![img_1.png](img_1.png)
+![img_1.png](image/img_1.png)
 
 Jeg har fået genereret noget DUMMY data (AI). Kør dette script for at fylde i databasen: [INSERT - dummy data](./scripts/INSERT_SCRIPT_DUMMY_DATA.sql)
 
@@ -42,15 +42,15 @@ Tanken var at indarbejde en form for "lås tildeling" feature, når den ønskede
 
 Herefter skulle fanen **Manuel håndtering** hjælpe studieadministrationen videre med en oversigt over dem der manuelt skal have valgfag tildelt, og en nem mulighed for at gøre dette (se nede i wireframe skitse).
 
-![img_8.png](img_8.png)
+![img_8.png](image/img_8.png)
 
 
 Her nedenstående er nogle af mine opstartsskitser i forhold til wireframes:
 
-![img_3.png](img_3.png)
+![img_3.png](image/img_3.png)
 
-![img_4.png](img_4.png)
+![img_4.png](image/img_4.png)
 
-![img_5.png](img_5.png)
+![img_5.png](image/img_5.png)
 
-![img_6.png](img_6.png)
+![img_6.png](image/img_6.png)
