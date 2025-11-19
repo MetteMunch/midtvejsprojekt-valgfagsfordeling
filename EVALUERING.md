@@ -25,7 +25,9 @@ Her vil jeg prøve at gennemgå de forskellige metoder, som udgør fordelingsalg
 Jeg arbejder med følgende variabler:
 
 n = antal elever
+
 p = antal prioriteter pr. elev (fast 5)
+
 c = antal valgfag (fast 8)
 
 <ins>preloadAllCourses()</ins>
