@@ -3,7 +3,7 @@ Jeg har med denne applikation ville prøve at lave en metode, som på en retfær
 Processen (distributionGreedyWithFairness()) kan i korte træk beskrives som vist nedenstående. 
 Algoritmen er lavet ud fra følgende forudsætninger: 
 - der er 8 forskellige valgfag.
-- hveert valgfag skal som udgangspunkt have minimum 8 og max 35 elever. Tanken er dog, at ved den efterfølgende manuelle tjek og restfordeling, så vil dette kunne overrules (ikke implementeret på nuværende tidspunkt).
+- hvert valgfag skal som udgangspunkt have minimum 8 og max 35 elever. Tanken er dog, at ved den efterfølgende manuelle tjek og restfordeling, så vil dette kunne overrules (ikke implementeret på nuværende tidspunkt).
 - hver elev skal have 3 valgfag.
 - hver elev indgiver 5 prioriteter, rangerende fra 1. - 5. med nummer 1 som det valgfag vedkommende helst vil have.
 ## Beskrivelse algoritmens proces:
@@ -23,17 +23,18 @@ Nedenstående figur viser det flowdiagram (1. version), som jeg udarbejdede for 
 # Køretidskompleksitet - fordelingsalgoritmen
 Her vil jeg prøve at gennemgå de forskellige metoder, som udgør fordelingsalgoritmen.
 Jeg arbejder med følgende variabler:
-n = antal elever
-p = antal prioriteter pr. elev
-c = antal valgfag
 
-<u>preloadAllCourses()</u>
+n = antal elever
+p = antal prioriteter pr. elev (fast 5)
+c = antal valgfag (fast 8)
+
+<ins>preloadAllCourses()</ins>
 Alle valgfag hentes én gang og gemmes i HashMap => O(c) = c er meget lille (8), så det svarer i praksis til O(1), hvilket er konstant tid uanset input.
 
-<u>allStudentsWithPriorities()</u>
+<ins>allStudentsWithPriorities()</ins>
 Jeg laver en stream på allStudents listen, så jeg kan filtrere dem fra, som ikke har indgivet prioriteter => O(n) = lineær tid afhængig af input
 
-<u>distributionGreedyWithFairness() – selve fordelingsalgoritmen</u>
+<ins>distributionGreedyWithFairness() – selve fordelingsalgoritmen</ins>
 ProcessRound()-delen:
 Hver elev håndteres 3 gange (runder), hvor der sker følgende:
 Eleven fjernes fra den oprindelige liste, hvilket sker i getRandom funktionen => O(n)
@@ -49,10 +50,10 @@ Så algoritmen har egentligt kvadratisk vækst, men eftersom n (antal elever) er
 # Køretidskompleksitet – statistikmetoder
 I applikationen er det muligt at køre fordelingen flere gange, hvilket jo vil give forskellige resultater (da det er random rækkefølge eleverne behandles i). Jeg har derfor lavet en kvantificeringsmetode og forskellige andre hjælpemetoder, som skal gøre det nemmere for studieadministratoren at vælge den rette fordeling.
 
-<u>getTotalQuantificationScore()</u>
+<ins>getTotalQuantificationScore()</ins>
 Denne laver en stream på allStudents listen, og for hver elev køres metoden calculateStudentScore(), som gennemgår hver elevs prioritetsliste for at tjekke hvor mange prioriteter, der er blevet fulfilled = true. Ud fra dette gives en score, som sammentælles og returneres. Jo tættere på 0 jo bedre score (dvs. flest mulige elever, har fået mange af deres første prioriteter opfyldt).
 Samlet kompleksitet her er O(1)*O(n) = O(n) så lineær
 
-<u>getDistributionStats()</u>
+<ins>getDistributionStats()</ins>
 I denne metode ønsker jeg at returnere data, der viser hvor mange elever, der har fået alle tre valgfag tildelt, hvor mange der mangler at få 1 valgfag tildelt, hvor mange der mangler at få 2 valgfag tildelt og hvor mange der mangler at få alle 3 valgfag tildelt (af de behandlede elever).
 Jeg laver i denne fire streams, som alle gennemløber alle elver, for at kunne filtrere og lave count. Denne ville nok kunne optimeres til en enkel stream med en switch. Selvom metoden udfører fire gennemløb af listen, reduceres O(4n) til O(n), køretiden stiger altså lineært i takt med antal elever.
