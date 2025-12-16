@@ -59,6 +59,7 @@ function loadAdminDashboard() {
                         <h3>Total kvantificering</h3>
                         <p id="stat-quant">...</p>
                         <br>
+                        <br>
                         <p class="info-tekst">Alt opfyldt = 0 point</p>
                         <p class="info-tekst">Opfyldt to ud af de tre første prioriteter = -1 point</p>
                         <p class="info-tekst">Opfyldt en ud af de tre første prioriteter = -2 point</p>
