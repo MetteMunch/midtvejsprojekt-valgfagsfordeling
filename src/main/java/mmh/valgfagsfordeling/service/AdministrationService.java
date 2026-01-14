@@ -157,9 +157,9 @@ public class AdministrationService {
                 .count();
 
         if (fulfilledFirst3 == 3) return 0;
-        if (fulfilledFirst3 == 2) return -1;
-        if (fulfilledFirst3 == 1) return -2;
-        return -3;
+        if (fulfilledFirst3 == 2) return -4;
+        if (fulfilledFirst3 == 1) return -8;
+        return -12;
     }
 
     public int getTotalQuantificationScore() {
