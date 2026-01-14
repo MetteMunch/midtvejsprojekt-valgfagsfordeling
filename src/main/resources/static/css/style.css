@@ -29,7 +29,6 @@ header {
     font-size: 1.4rem;
     font-weight: bold;
     background: #eee;
-    padding: 10px 20px;
     border-radius: 4px;
 }
 
@@ -181,12 +180,30 @@ footer {
     font-weight: bold;
 }
 
-#stat-quant,
 #stat-processed {
-    font-size: 2.4rem;      /* ca. dobbelt så stort */
+    font-size: 2.4rem;
     font-weight: bold;
     margin: 10px 0;
     color: #0074cc;
+}
+
+#stat-quant{
+    font-size: 2.4rem;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+/* Farver */
+.green {
+    color: green;
+}
+
+.orange {
+    color: orange;
+}
+
+.red {
+    color: red;
 }
 
 .info-tekst {

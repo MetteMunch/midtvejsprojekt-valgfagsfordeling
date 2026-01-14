@@ -61,9 +61,9 @@ function loadAdminDashboard() {
                         <br>
                         <br>
                         <p class="info-tekst">Alt opfyldt = 0 point</p>
-                        <p class="info-tekst">Opfyldt to ud af de tre første prioriteter = -1 point</p>
-                        <p class="info-tekst">Opfyldt en ud af de tre første prioriteter = -2 point</p>
-                        <p class="info-tekst">Ingen opfyldt af de tre første prioriteter = -3 point</p>
+                        <p class="info-tekst">Opfyldt to ud af de tre første prioriteter = -4 point</p>
+                        <p class="info-tekst">Opfyldt en ud af de tre første prioriteter = -8 point</p>
+                        <p class="info-tekst">Ingen opfyldt af de tre første prioriteter = -12 point</p>
                         
                     </div>
 
@@ -142,7 +142,22 @@ function renderDashboard(data) {
     document.getElementById("stat-processed").textContent = data.processedStudents
 
     // Total kvantificering
-    document.getElementById("stat-quant").textContent = data.totalQuantification
+    const quant = document.getElementById("stat-quant");
+    const value = data.totalQuantification;
+    console.log("value", value);
+
+    quant.textContent = value;
+
+    // Fjern evt. gamle klasser
+    quant.classList.remove("green", "orange", "red");
+
+    if (value >= -450) {
+        quant.classList.add("green");
+    } else if (value >= -455) {
+        quant.classList.add("orange");
+    } else {
+        quant.classList.add("red");
+    }
 
     // ------------------ FORDELING (TABEL) ------------------
     const distributionLabels = {
