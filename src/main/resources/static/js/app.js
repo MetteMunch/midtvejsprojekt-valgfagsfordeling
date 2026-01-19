@@ -56,12 +56,12 @@ function loadAdminDashboard() {
                     </div>
 
                     <div class="stat-box">
-                        <h3>Total kvantificering</h3>
+                        <h3>Beregnet samlet fairness</h3>
                         <p id="stat-quant">...</p>
                         <br>
                         <br>
                         <p class="info-tekst">Fairness-score, jo lavere tal = mere fair</p>
-                        <p class="info-tekst">Beregnet spredning / varians i elev tilfredshed</p>
+                        <p class="info-tekst">Beregnet ud fra spredning / varians i elev tilfredshed</p>
                     </div>
 
                     <div class="stat-box">
