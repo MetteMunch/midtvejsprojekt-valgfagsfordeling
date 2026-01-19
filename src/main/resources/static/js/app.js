@@ -60,11 +60,8 @@ function loadAdminDashboard() {
                         <p id="stat-quant">...</p>
                         <br>
                         <br>
-                        <p class="info-tekst">Alt opfyldt = 0 point</p>
-                        <p class="info-tekst">Opfyldt to ud af de tre første prioriteter = -4 point</p>
-                        <p class="info-tekst">Opfyldt en ud af de tre første prioriteter = -8 point</p>
-                        <p class="info-tekst">Ingen opfyldt af de tre første prioriteter = -12 point</p>
-                        
+                        <p class="info-tekst">Fairness-score, jo lavere tal = mere fair</p>
+                        <p class="info-tekst">Beregnet spredning / varians i elev tilfredshed</p>
                     </div>
 
                     <div class="stat-box">
@@ -143,17 +140,17 @@ function renderDashboard(data) {
 
     // Total kvantificering
     const quant = document.getElementById("stat-quant");
-    const value = data.totalQuantification;
+    const value = data.fairnessScore;
     console.log("value", value);
 
-    quant.textContent = value;
+    quant.textContent = Number(value).toFixed(3);
 
     // Fjern evt. gamle klasser
     quant.classList.remove("green", "orange", "red");
 
-    if (value >= (data.processedStudents * -4.73)) {
+    if (value <= (data.processedStudents / 54)) {
         quant.classList.add("green");
-    } else if (value >= (data.processedStudents * -4.78)) {
+    } else if (value <= (data.processedStudents / 48)) {
         quant.classList.add("orange");
     } else {
         quant.classList.add("red");
