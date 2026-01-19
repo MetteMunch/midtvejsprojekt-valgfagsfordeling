@@ -3,6 +3,7 @@ package mmh.valgfagsfordeling.controller;
 import mmh.valgfagsfordeling.dto.CourseDTO;
 import mmh.valgfagsfordeling.dto.DashboardAdmDTO;
 import mmh.valgfagsfordeling.dto.StudentDTO;
+import mmh.valgfagsfordeling.model.Student;
 import mmh.valgfagsfordeling.service.AdministrationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +38,6 @@ public class AdministrationController {
 
         return ResponseEntity.ok(students); //returnerer statuskode 200 og listen med students
     }
-
 
     @GetMapping("/student/{id}/courses")
     public ResponseEntity<List<CourseDTO>> listOfCoursesSpecificStudent(@PathVariable int id) {

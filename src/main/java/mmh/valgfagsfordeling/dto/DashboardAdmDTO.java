@@ -6,7 +6,7 @@ import java.util.Map;
 public class DashboardAdmDTO {
 
     public int processedStudents;
-    public int totalQuantification;
+    public double fairnessScore;
     public Map<String, Integer> stats;
     public List<StudentDTO> studentsWithoutPriorities;
     public List<StatsDTO> courseStats;
@@ -22,12 +22,12 @@ public class DashboardAdmDTO {
         this.processedStudents = processedStudents;
     }
 
-    public int getTotalQuantification() {
-        return totalQuantification;
+    public double getFairnessScore() {
+        return fairnessScore;
     }
 
-    public void setTotalQuantification(int totalQuantification) {
-        this.totalQuantification = totalQuantification;
+    public void setFairnessScore(double fairnessScore) {
+        this.fairnessScore = fairnessScore;
     }
 
     public Map<String, Integer> getStats() {

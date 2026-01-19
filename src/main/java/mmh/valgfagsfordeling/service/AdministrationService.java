@@ -82,7 +82,6 @@ public class AdministrationService {
             List<Student> fulfilledList,
             List<Student> toBeFirstList,
             boolean isFinalRound) {
-        System.out.println("Her er jeg i metoden processRound");
 
         if (sourceList.isEmpty()) return;
 
@@ -104,13 +103,15 @@ public class AdministrationService {
                 //if (p.isFulfilled()) continue;
 
                 if (checkIfAvailable(course.getCourseId())) {
-                    p.setFulfilled(true);
+                    if (!p.isFulfilled()) {
+                        p.setFulfilled(true);
+                        addCount(course.getCourseId());
+                    }
                     student.incrementHandlingCount();
-                    addCount(course.getCourseId());
                     gotCourse = true;
 
                     // Flyttes til rette liste (fairness)
-                    if (p.getPriorityNumber() == (handlingCount)) {
+                    if (p.getPriorityNumber() == (handlingCount + 1)) {
                         fulfilledList.add(student);
                     } else {
                         toBeFirstList.add(student);
@@ -150,25 +151,36 @@ public class AdministrationService {
         return (allStudentListBackUp.isEmpty()) ? 0 : allStudentListBackUp.size();
     }
 
-    public int calculateStudentScore(Student student) {
-        List<Priority> priorities = student.getPriorityList();
-
-        long fulfilledFirst3 = priorities.stream()
-                .filter(p -> p.getPriorityNumber() <= 3)
-                .filter(Priority::isFulfilled)
-                .count();
-
-        if (fulfilledFirst3 == 3) return 0;
-        if (fulfilledFirst3 == 2) return -4;
-        if (fulfilledFirst3 == 1) return -8;
-        return -12;
+    public int studentSatisfaction(Student s) {
+        int score = 0;
+        for (Priority p : s.getPriorityList()) {
+            if (p.isFulfilled()) {
+                score += (6 - p.getPriorityNumber());
+            }
+        }
+        return score;
     }
 
-    public int getTotalQuantificationScore() {
-        return allStudentListBackUp.stream()
-                .mapToInt(this::calculateStudentScore)
-                .sum();
+    public double getFairnessScore() {
+
+        List<Integer> scores = allStudentListBackUp.stream()
+                .map(this::studentSatisfaction)
+                .toList();
+
+        double avg = scores.stream()  //her beregnes gennemsnittet af alle elevernes "tilfredshed" (scores)
+                .mapToInt(Integer::intValue)
+                .average()
+                .orElse(0);
+
+        double variance = scores.stream()
+                .mapToDouble(s -> Math.pow(s - avg, 2)) //finder afstand fra gennesnittet, ganger med sig selv (positivt) og stor afstand straffes
+                .average()
+                .orElse(0);
+
+        return variance;
     }
+
+
 
     //Metode der returnerer de data som jeg gerne vil vise på dashboard i forhold til kvantificering
     public Map<String, Integer> getDistributionStats() {
@@ -219,16 +231,13 @@ public class AdministrationService {
     }
 
 
-
-
-
     //--------------------DTO METODER TIL ENDPOINTS-----------------------
 
     //samling af data til dashboard for studieadministration
     public DashboardAdmDTO buildDashboard() {
         DashboardAdmDTO dashboardData = new DashboardAdmDTO();
         dashboardData.setProcessedStudents(getTotalProcessedStudents());
-        dashboardData.setTotalQuantification(getTotalQuantificationScore());
+        dashboardData.setFairnessScore(getFairnessScore());
         dashboardData.setStats(getDistributionStats());
         dashboardData.setStudentsWithoutPriorities(allStudentsWithoutPrioritiesDTO());
         dashboardData.setCourseStats(getCourseStats());
