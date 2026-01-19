@@ -151,9 +151,9 @@ function renderDashboard(data) {
     // Fjern evt. gamle klasser
     quant.classList.remove("green", "orange", "red");
 
-    if (value >= -450) {
+    if (value >= (data.processedStudents * -4.73)) {
         quant.classList.add("green");
-    } else if (value >= -455) {
+    } else if (value >= (data.processedStudents * -4.78)) {
         quant.classList.add("orange");
     } else {
         quant.classList.add("red");

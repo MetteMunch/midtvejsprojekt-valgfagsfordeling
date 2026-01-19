@@ -101,6 +101,8 @@ public class AdministrationService {
                 Priority p = priorities.get(i);
                 Course course = p.getCourse();
 
+                //if (p.isFulfilled()) continue;
+
                 if (checkIfAvailable(course.getCourseId())) {
                     p.setFulfilled(true);
                     student.incrementHandlingCount();
@@ -108,7 +110,7 @@ public class AdministrationService {
                     gotCourse = true;
 
                     // Flyttes til rette liste (fairness)
-                    if (p.getPriorityNumber() == handlingCount) {
+                    if (p.getPriorityNumber() == (handlingCount)) {
                         fulfilledList.add(student);
                     } else {
                         toBeFirstList.add(student);
