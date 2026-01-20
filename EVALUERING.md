@@ -39,22 +39,22 @@ Jeg laver en stream på allStudents listen, så jeg kan filtrere dem fra, som ik
 <ins>distributionGreedyWithFairness() – selve fordelingsalgoritmen</ins>
 ProcessRound()-delen:
 Hver elev håndteres 3 gange (runder), hvor der sker følgende:
-Eleven fjernes fra den oprindelige liste, hvilket sker i getRandom funktionen => O(n)
+Der findes en random elev i den oprindelige liste og eleven fjernes også fra denne liste, alt dette sker i getRandom funktionen => O(n)
 Tjek af hvilken prioritet, at vi er kommet til for at finde korrekt valgfag til tjek (for-loop) => O(p), eftersom p er konstant, så O(1)
 checkIfAvailable(), som er opslag i HashMap => O(1)
 setFulfilled(), som ændrer boolean variabel på prioritet => O(1)
 incrementHandlingCount(), hvor det tælles op på variablen, der viser hvor mange gange eleven er blevet håndteret => O(1)
 addCount(), hvor der tælles op på variablen, der gemmer hvor mange der deltager på valgfaget => O(1)
 Eleven tilføjes til rette liste til næste runde eller manuel håndtering  => O(1)
-Samlet kompleksitet for denne del er O(n), og det gør vi for n elever, dvs. samlet = O(n^2)
+Samlet kompleksitet for processRound er altså O(n), og det gør vi for n elever, dvs. samlet = O(n^2)
 Så algoritmen har egentligt kvadratisk vækst, men eftersom n (antal elever) er forholdsvis lille (omkring 90-100), så er runtime stadig hurtig og algoritmen dermed effektiv.
 
 # Køretidskompleksitet – statistikmetoder
-I applikationen er det muligt at køre fordelingen flere gange, hvilket jo vil give forskellige resultater (da det er random rækkefølge eleverne behandles i). Jeg har derfor lavet en kvantificeringsmetode og forskellige andre hjælpemetoder, som skal gøre det nemmere for studieadministratoren at vælge den rette fordeling.
+I applikationen er det muligt at køre fordelingen flere gange, hvilket jo vil give forskellige resultater (da det er random rækkefølge eleverne behandles i). Derfor har jeg lavet forskellige beregninger og hjælpemetoder, som skal gøre det nemmere for studieadministratoren at vælge den rette fordeling.
 
-<ins>getTotalQuantificationScore()</ins>
-Denne laver en stream på allStudents listen, og for hver elev køres metoden calculateStudentScore(), som gennemgår hver elevs prioritetsliste for at tjekke hvor mange prioriteter, der er blevet fulfilled = true. Ud fra dette gives en score, som sammentælles og returneres. Jo tættere på 0 jo bedre score (dvs. flest mulige elever, har fået mange af deres første prioriteter opfyldt).
-Samlet kompleksitet her er O(1)*O(n) = O(n) så lineær
+<ins>getFairnessScore()</ins>
+Først beregnes den enkelte elevs tilfredshed, ment på den måde, at leven tildels point alt efter hvilke prioriteter vedkommende har fået opfyldt (studentSatisfaction). Ud fra alle elevers tilfredshedsscore beregnes så en gennemsnitlig score, og det der vises på dashboard er hvor meget varians der er i forhold til dette gennemsnit. Dvs. jo lavere tal jo tættere på gennemsnittet = jo flere elever er tilfredse.
+Tidligere havde jeg en getTotalQuantificationScore(), men dette gav ikke et brugtbart resultat (udsvingsmæssigt).
 
 <ins>getDistributionStats()</ins>
 I denne metode ønsker jeg at returnere data, der viser hvor mange elever, der har fået alle tre valgfag tildelt, hvor mange der mangler at få 1 valgfag tildelt, hvor mange der mangler at få 2 valgfag tildelt og hvor mange der mangler at få alle 3 valgfag tildelt (af de behandlede elever).

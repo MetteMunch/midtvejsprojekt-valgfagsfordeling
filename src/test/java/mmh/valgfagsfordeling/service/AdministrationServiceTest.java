@@ -186,18 +186,21 @@ class AdministrationServiceTest {
         Student s = new Student("Test", "test@test.dk");
 
         Priority p1 = new Priority();
+        p1.setPriorityNumber(1);
         p1.setFulfilled(true);
 
         Priority p2 = new Priority();
+        p2.setPriorityNumber(2);
         p2.setFulfilled(false);
 
         Priority p3 = new Priority();
+        p3.setPriorityNumber(3);
         p3.setFulfilled(true);
 
         s.setPriorityList(List.of(p1, p2, p3));
 
         assertEquals(2, service.getFulfilledCount(s));
-        assertEquals(-1, service.calculateStudentScore(s));
+        assertEquals(8, service.studentSatisfaction(s));
     }
 
     @Test
